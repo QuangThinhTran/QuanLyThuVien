@@ -20,7 +20,8 @@ namespace QuanLyThuVien.Views
                 Console.WriteLine("2. Xóa khách hàng");
                 Console.WriteLine("3. Hiển thị danh sách khách hàng");
                 Console.WriteLine("4. Tìm khách hàng theo tên");
-                Console.WriteLine("5. Thoát");
+                Console.WriteLine("5. Sắp xếp khách hàng theo tên");
+                Console.WriteLine("6. Thoát");
                 Console.Write("Chọn một tùy chọn: ");
                 string luaChon = Console.ReadLine();
                 switch (luaChon)
@@ -42,6 +43,10 @@ namespace QuanLyThuVien.Views
                         break;
 
                     case "5":
+                        SapXepKhachHangTheoTen(context);
+                        break;
+
+                    case "6":
                         return;
 
                     default:
@@ -58,15 +63,6 @@ namespace QuanLyThuVien.Views
             if (string.IsNullOrWhiteSpace(tenKhachHang))
             {
                 Console.WriteLine("Tên khách hàng là bắt buộc.");
-                Console.ReadKey();
-                return;
-            }
-
-            Console.Write("Nhập địa chỉ: ");
-            string diaChi = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(diaChi))
-            {
-                Console.WriteLine("Địa chỉ là bắt buộc.");
                 Console.ReadKey();
                 return;
             }
@@ -114,16 +110,23 @@ namespace QuanLyThuVien.Views
         {
             Console.Write("Nhập email khách hàng cần xóa: ");
             string email = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                Console.WriteLine("Email là bắt buộc.");
+                Console.ReadKey();
+                return;
+            }
+
             var khachHang = context.KhachHang.FirstOrDefault(k => k.Email == email);
             if (khachHang != null)
             {
-            context.KhachHang.Remove(khachHang);
-            context.SaveChanges();
-            Console.WriteLine("Xóa khách hàng thành công!");
+                context.KhachHang.Remove(khachHang);
+                context.SaveChanges();
+                Console.WriteLine("Xóa khách hàng thành công!");
             }
             else
             {
-            Console.WriteLine("Không tìm thấy khách hàng với email đã nhập.");
+                Console.WriteLine("Không tìm thấy khách hàng với email đã nhập.");
             }
             Console.ReadKey();
         }
@@ -143,6 +146,13 @@ namespace QuanLyThuVien.Views
         {
             Console.Write("Nhập tên khách hàng cần tìm: ");
             string tenKhachHang = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(tenKhachHang))
+            {
+                Console.WriteLine("Tên khách hàng là bắt buộc.");
+                Console.ReadKey();
+                return;
+            }
+
             var khachHangTimThay = context.KhachHang.Where(k => k.TenKhachHang.Contains(tenKhachHang)).ToList();
             if (khachHangTimThay.Any())
             {
@@ -155,6 +165,17 @@ namespace QuanLyThuVien.Views
             else
             {
                 Console.WriteLine("Không tìm thấy khách hàng với tên đã nhập.");
+            }
+            Console.ReadKey();
+        }
+
+        private void SapXepKhachHangTheoTen(ThuVienContext context)
+        {
+            var danhSachKhachHang = context.KhachHang.OrderBy(k => k.TenKhachHang).ToList();
+            Console.WriteLine("Danh sách khách hàng sắp xếp theo tên:");
+            foreach (var khachHang in danhSachKhachHang)
+            {
+                Console.WriteLine($"ID: {khachHang.Id}, Tên: {khachHang.TenKhachHang}, Số điện thoại: {khachHang.SoDienThoai}, Email: {khachHang.Email}");
             }
             Console.ReadKey();
         }
