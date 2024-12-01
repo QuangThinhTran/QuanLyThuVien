@@ -1,5 +1,4 @@
-﻿using QuanLyThuVien.views;
-using QuanLyThuVien.Views;
+﻿using QuanLyThuVien.Views;
 using System;
 using System.Text;
 
@@ -40,6 +39,8 @@ namespace QuanLyThuVien
                         break;
 
                     case "4":
+                        var quanLyThueSach = new QuanLyThueSach();
+                        quanLyThueSach.QuanLyThueSachMenu();
                         break;
 
                     case "5":
