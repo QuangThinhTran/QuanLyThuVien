@@ -16,7 +16,8 @@ namespace QuanLyThuVien.Views
                 Console.WriteLine("1. Thêm thể loại");
                 Console.WriteLine("2. Xóa thể loại");
                 Console.WriteLine("3. Hiển thị danh sách thể loại");
-                Console.WriteLine("4. Thoát");
+                Console.WriteLine("4. Tìm kiếm thể loại sách");
+                Console.WriteLine("5. Thoát");
                 Console.Write("Chọn một tùy chọn: ");
                 string luaChon = Console.ReadLine();
                 switch (luaChon)
@@ -34,6 +35,10 @@ namespace QuanLyThuVien.Views
                         break;
 
                     case "4":
+                        TimKiemTheLoai(context);
+                        break;
+
+                    case "5":
                         return;
 
                     default:
@@ -93,6 +98,33 @@ namespace QuanLyThuVien.Views
             foreach (var theLoai in theLoais)
             {
                 Console.WriteLine($"ID: {theLoai.Id}, Tên thể loại: {theLoai.TenLoai}");
+            }
+            Console.ReadKey();
+        }
+
+        void TimKiemTheLoai(ThuVienContext context)
+        {
+            Console.Write("Nhập tên thể loại cần tìm: ");
+            string tenTheLoai = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(tenTheLoai))
+            {
+                Console.WriteLine("Tên thể loại là bắt buộc.");
+                Console.ReadKey();
+                return;
+            }
+
+            var theLoaiTimThay = context.TheLoai.Where(tl => tl.TenLoai.Contains(tenTheLoai)).ToList();
+            if (theLoaiTimThay.Any())
+            {
+                Console.WriteLine("Kết quả tìm kiếm:");
+                foreach (var theLoai in theLoaiTimThay)
+                {
+                    Console.WriteLine($"ID: {theLoai.Id}, Tên thể loại: {theLoai.TenLoai}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Không tìm thấy thể loại với tên đã nhập.");
             }
             Console.ReadKey();
         }
